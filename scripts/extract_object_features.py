@@ -277,3 +277,4 @@ if __name__ == '__main__':
     object_extractor.to(device)
 
     extract_object_features(params=params, model=object_extractor, device=device)
+    print('############extracting object features accomplished!############')

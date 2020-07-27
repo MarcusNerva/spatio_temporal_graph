@@ -212,3 +212,5 @@ if __name__ == '__main__':
     resnet101 = torchvision.models.resnet101(pretrained=True)
     resnet101 = resnet101.to(device)
     extract_feats(params=params, model=resnet101, device=device)
+
+    print('############extracting scene features accomplished!############')
