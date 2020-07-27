@@ -9,7 +9,6 @@ import argparse
 import torch
 import torchvision
 import cv2
-from pretrainedmodels import utils
 C, H, W = 3, 224, 224
 
 def process_frames(frames_path):
