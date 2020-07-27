@@ -82,27 +82,6 @@ class ObjectExtractor(FasterRCNN):
             return list(box_features_list), list(precise_proposals)
 
 
-def extract_frames(video, dst):
-    """
-    This function aims to extract frames from videos.
-
-    Args:
-        video: path of input video
-        dst: the directory for saving extracted frames
-
-    Returns: None
-
-    """
-    with open(os.devnull, 'w') as ffmpeg_log:
-        if os.path.exists(dst):
-            print('clean up ' + dst)
-            shutil.rmtree(dst)
-        os.makedirs(dst)
-        video_to_frames_command = ['ffmpeg', '-y', '-i', video, '-r', '25', '-vf', 'scale=400:300', '-qscale:v', '2',
-                                   '{0}/%06d.jpg'.format(dst)]
-        subprocess.call(video_to_frames_command, stdout=ffmpeg_log, stderr=ffmpeg_log)
-
-
 def iou(box0, box1):
     """
     This function aims to calculate iou value between box0 and box1.
@@ -192,29 +171,29 @@ def extract_object_features(params, model, device):
         None.
     """
 
+    data_dir = params['data_dir']
     dir_fc = params['output_dir']
     video_store = params['video_path']
     n_frames = params['n_frames_per_video']
     max_objects = 5
+
+    assert data_dir is not '', 'please set data_dir!'
     assert dir_fc is not '', 'please set dir_fc!'
     assert video_store is not '', 'please set video_store!'
     assert n_frames != 0, 'please set n_frames_per_video!'
 
-    dir_frame = os.path.join(dir_fc, 'frames')
+    dir_frame = os.path.join(data_dir, 'frames')
     dir_spatial = os.path.join(dir_fc, 'spatial')
     dir_temporal = os.path.join(dir_fc, 'temporal')
 
     if not os.path.exists(dir_fc):
         os.mkdir(dir_fc)
-    if not os.path.exists(dir_frame):
-        os.mkdir(dir_frame)
     if not os.path.exists(dir_spatial):
         os.mkdir(dir_spatial)
     if not os.path.exists(dir_temporal):
         os.mkdir(dir_temporal)
 
     print('save video object features to %s' % (dir_fc))
-    print('save video frames to %s' % (dir_frame))
     print('save video spatial features to %s' % (dir_spatial))
     print('save video temporal features to %s' % (dir_temporal))
 
@@ -223,7 +202,6 @@ def extract_object_features(params, model, device):
     for video in tqdm(video_list):
         video_id = video.split('/')[-1].split('.')[0]
         temp_frame_dir = os.path.join(dir_frame, video_id)
-        extract_frames(video, temp_frame_dir)
 
         image_list = sorted(glob.glob(os.path.join(temp_frame_dir, '*.jpg')))
         samples = np.round(np.linspace(0, len(image_list) - 1, n_frames))
@@ -274,6 +252,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--data_dir', dest='data_dir', type=str,
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data',
+                        help='directory of storing data')
     parser.add_argument('--output_dir', dest='output_dir', type=str,
                         default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/object',
                         help='the directory of storing object features')

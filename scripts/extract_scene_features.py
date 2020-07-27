@@ -136,21 +136,19 @@ def extract_feats(params, model, device):
     model.eval()
 
     dir_fc = params['output_dir']
+    data_dir = params['data_dir']
     dir_optical_fc = os.path.join(dir_fc, 'optical_flow')
     dir_2d_fc = os.path.join(dir_fc, '2d')
-    dir_frame_fc = os.path.join(dir_fc, 'frames')
+    dir_frame_fc = os.path.join(data_dir, 'frames')
 
     if not os.path.exists(dir_fc):
         os.mkdir(dir_fc)
-    if not os.path.exists(dir_frame_fc):
-        os.mkdir(dir_frame_fc)
     if not os.path.exists(dir_optical_fc):
         os.mkdir(dir_optical_fc)
     if not os.path.exists(dir_2d_fc):
         os.mkdir(dir_2d_fc)
 
     print('save video feats to %s' % (dir_fc))
-    print('save video frames to %s' % (dir_frame_fc))
     print('save 2d feats to %s' % (dir_2d_fc))
     print('save optical flow frames to %s' % (dir_optical_fc))
     video_list = glob.glob(os.path.join(params['video_path'], '*.mp4'))
@@ -158,7 +156,6 @@ def extract_feats(params, model, device):
     for video in tqdm(video_list):
         video_id = video.split('/')[-1].split('.')[0]
         dst = os.path.join(dir_frame_fc, video_id)
-        extract_frames(video, dst)
         process_frames(dst)
 
         # extract ResNet101 2D features
@@ -189,7 +186,6 @@ def extract_feats(params, model, device):
             save_flows(x_flow=x_flow, y_flow=y_flow, flow_path=flow_path)
             prev = crt
 
-        shutil.rmtree(dst)
 
 
 
@@ -197,6 +193,9 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--data_dir', dest='data_dir', type=str,
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data',
+                        help='directory of storing data')
     parser.add_argument('--output_dir', dest='output_dir', type=str,
                         default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/scene',
                         help='directory to store features')
