@@ -275,13 +275,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--output_dir', dest='output_dir', type=str,
-                        default='/Users/bismarck/Downloads/temp_data/object',
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/object',
                         help='the directory of storing object features')
     parser.add_argument('--n_frames_per_video', dest='n_frames_per_video', type=int,
                         default=10,
                         help='how many frames should I utilized to extract features')
     parser.add_argument('--video_path', dest='video_path', type=str,
-                        default='/Users/bismarck/Downloads/temp_data/videos',
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/videos',
                         help='path of dir where holds videos')
 
     args = parser.parse_args()

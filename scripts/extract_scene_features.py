@@ -199,13 +199,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--output_dir', dest='output_dir', type=str,
-                        default='/Users/bismarck/PycharmProjects/spatio_temporal_graph/data/scene',
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/scene',
                         help='directory to store features')
     parser.add_argument('--n_frame_steps_2D', dest='n_frame_steps_2D', type=int,
                         default=10,
                         help='how many frames to sample per video')
     parser.add_argument('--video_path', dest='video_path', type=str,
-                        default='/Users/bismarck/PycharmProjects/spatio_temporal_graph/data/videos',
+                        default='/disks/lilaoshi666/hanhua.ye/spatio_temporal_graph/data/videos',
                         help='path to video dataset')
 
     args = parser.parse_args()
