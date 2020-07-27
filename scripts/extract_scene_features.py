@@ -164,7 +164,7 @@ def extract_feats(params, model, device):
         # extract ResNet101 2D features
         image_list = sorted(glob.glob(os.path.join(dst, '*.jpg')))
         image_list_cpy = image_list.copy()
-        samples = np.round(np.linspace(0, len(image_list) - 1, params['n_frames_steps_2D']))
+        samples = np.round(np.linspace(0, len(image_list) - 1, params['n_frame_steps_2D']))
         image_list = [image_list[int(sample)] for sample in samples]
         images = torch.zeros(len(image_list), C, H, W)
         for iImg in range(len(image_list)):
