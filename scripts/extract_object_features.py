@@ -133,8 +133,12 @@ def compute_temporal_matrix(box_features_crt, box_features_next):
     Returns:
          G_temporal: temporal graph matrix whose shape is (5, 5).
     """
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     crt_norm = torch.norm(box_features_crt, dim=1) + EPS
     next_norm = torch.norm(box_features_next, dim=1) + EPS
+
+    crt_norm = crt_norm.to(device)
+    next_norm = next_norm.to(device)
     norm_matrix = crt_norm[:, None] * next_norm[None, :]
 
     cosine_matrix = box_features_crt @ box_features_next.T
