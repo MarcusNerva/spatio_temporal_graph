@@ -9,6 +9,7 @@ import torchvision
 import torch
 import numpy as np
 from torch.jit.annotations import Tuple, List, Dict, Optional
+from .extract_frames import extract_frames
 
 from torchvision.models.utils import load_state_dict_from_url
 from torchvision.models.detection.faster_rcnn import FasterRCNN, TwoMLPHead, fasterrcnn_resnet50_fpn
@@ -190,23 +191,31 @@ def extract_object_features(params, model, device):
     dir_frame = os.path.join(data_dir, 'frames')
     dir_spatial = os.path.join(dir_fc, 'spatial')
     dir_temporal = os.path.join(dir_fc, 'temporal')
+    dir_object = os.path.join(dir_fc, 'object')
 
     if not os.path.exists(dir_fc):
         os.mkdir(dir_fc)
+    if not os.path.exists(dir_frame):
+        os.mkdir(dir_frame)
     if not os.path.exists(dir_spatial):
         os.mkdir(dir_spatial)
     if not os.path.exists(dir_temporal):
         os.mkdir(dir_temporal)
+    if not os.path.exists(dir_object):
+        os.mkdir(dir_object)
 
     print('save video object features to %s' % (dir_fc))
+    print('save frames to %s' % (dir_frame))
     print('save video spatial features to %s' % (dir_spatial))
     print('save video temporal features to %s' % (dir_temporal))
+    print('save object features to %s' % (dir_object))
 
     video_list = glob.glob(os.path.join(video_store, '*.mp4'))
     transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
     for video in tqdm(video_list):
         video_id = video.split('/')[-1].split('.')[0]
         temp_frame_dir = os.path.join(dir_frame, video_id)
+        extract_frames(video, temp_frame_dir)
 
         image_list = sorted(glob.glob(os.path.join(temp_frame_dir, '*.jpg')))
         samples = np.round(np.linspace(0, len(image_list) - 1, n_frames))
@@ -244,10 +253,14 @@ def extract_object_features(params, model, device):
         spatial_features = torch.stack(spatial_list, dim=0).cpu().numpy()
         # temporal_features.shape == (9, 5, 5)
         temporal_features = torch.stack(temporal_list, dim=0).cpu().numpy()
+        # object_features.shape == (50, 1024)
+        object_features = torch.cat(feature_list, dim=0)
         outfile_spatial = os.path.join(dir_spatial, video_id + '.npy')
         outfile_temporal = os.path.join(dir_temporal, video_id + '.npy')
+        outfile_object = os.path.join(dir_object, video_id + '.npy')
         np.save(outfile_spatial, spatial_features)
         np.save(outfile_temporal, temporal_features)
+        np.save(outfile_object, object_features)
 
         shutil.rmtree(temp_frame_dir)
 
