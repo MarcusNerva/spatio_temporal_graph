@@ -9,6 +9,8 @@ import torchvision
 import torch
 import numpy as np
 from torch.jit.annotations import Tuple, List, Dict, Optional
+import sys
+sys.path.append('../')
 from scripts.extract_frames import extract_frames
 
 from torchvision.models.utils import load_state_dict_from_url
