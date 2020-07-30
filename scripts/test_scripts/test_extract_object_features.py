@@ -1,7 +1,12 @@
 import sys
-sys.path.append('/Users/bismarck/PycharmProjects/spatio_temporal_graph/scripts/extract_object_features.py')
-sys.path.append('/Users/bismarck/PycharmProjects/spatio_temporal_graph/')
+sys.path.append('/Users/bismarck/PycharmProjects/spatio_temporal_graph/scripts/')
+sys.path.append('../../../')
+sys.path.append('../../')
+sys.path.append('../')
+print(sys.path)
 
+
+from scripts import extract_frames
 from scripts.extract_object_features import extract_frames
 from scripts.extract_object_features import iou
 from scripts.extract_object_features import compute_spatial_matrix
