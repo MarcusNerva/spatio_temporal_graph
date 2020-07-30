@@ -9,7 +9,7 @@ import torchvision
 import torch
 import numpy as np
 from torch.jit.annotations import Tuple, List, Dict, Optional
-from .extract_frames import extract_frames
+from scripts.extract_frames import extract_frames
 
 from torchvision.models.utils import load_state_dict_from_url
 from torchvision.models.detection.faster_rcnn import FasterRCNN, TwoMLPHead, fasterrcnn_resnet50_fpn
