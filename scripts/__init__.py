@@ -1,2 +1,2 @@
 from scripts.extract_scene_features import *
-from scripts.extract_object_features import extract_frames
+from .extract_frames import extract_frames

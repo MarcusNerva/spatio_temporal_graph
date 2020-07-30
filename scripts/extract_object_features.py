@@ -254,7 +254,12 @@ def extract_object_features(params, model, device):
         # temporal_features.shape == (9, 5, 5)
         temporal_features = torch.stack(temporal_list, dim=0).cpu().numpy()
         # object_features.shape == (50, 1024)
-        object_features = torch.cat(feature_list, dim=0)
+        object_features = torch.cat(feature_list, dim=0).cpu().numpy()
+
+        assert spatial_features.shape == (10, 5, 5), 'problems with spatial_features extraction!'
+        assert temporal_features.shape == (9, 5, 5), 'problems with temporal_features extraction!'
+        assert object_features.shape == (50, 1024), 'problems with object_features extraction!'
+
         outfile_spatial = os.path.join(dir_spatial, video_id + '.npy')
         outfile_temporal = os.path.join(dir_temporal, video_id + '.npy')
         outfile_object = os.path.join(dir_object, video_id + '.npy')
