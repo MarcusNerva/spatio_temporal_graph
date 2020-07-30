@@ -253,7 +253,7 @@ def extract_object_features(params, model, device):
             if n_objects >= max_objects:
                 feature, proposal = feature[:max_objects], proposal[:max_objects]
             else:
-                new_feature, new_proposal = torch.zeros(max_objects, feature_dim), torch.zeros(max_objects, proposal_dim)
+                new_feature, new_proposal = torch.zeros(max_objects, feature_dim).to(device), torch.zeros(max_objects, proposal_dim).to(device)
                 new_feature[:n_objects, ...] = feature[:n_objects, ...]
                 new_proposal[:n_objects, ...] = proposal[:n_objects, ...]
                 feature, proposal = new_feature, new_proposal
