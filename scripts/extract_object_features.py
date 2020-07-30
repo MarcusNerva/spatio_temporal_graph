@@ -9,9 +9,6 @@ import torchvision
 import torch
 import numpy as np
 from torch.jit.annotations import Tuple, List, Dict, Optional
-import sys
-sys.path.append('../')
-from scripts.extract_frames import extract_frames
 
 from torchvision.models.utils import load_state_dict_from_url
 from torchvision.models.detection.faster_rcnn import FasterRCNN, TwoMLPHead, fasterrcnn_resnet50_fpn
@@ -83,6 +80,26 @@ class ObjectExtractor(FasterRCNN):
             box_features_list = box_features.split(num_boxes_per_image, 0)
 
             return list(box_features_list), list(precise_proposals)
+
+def extract_frames(video, dst):
+    """
+    This function aims to extract frames from videos.
+
+    Args:
+        video: path of input video
+        dst: the directory for saving extracted frames
+
+    Returns: None
+
+    """
+    with open(os.devnull, 'w') as ffmpeg_log:
+        if os.path.exists(dst):
+            print('clean up ' + dst)
+            shutil.rmtree(dst)
+        os.makedirs(dst)
+        video_to_frames_command = ['ffmpeg', '-y', '-i', video, '-r', '25', '-vf', 'scale=400:300', '-qscale:v', '2',
+                                   '{0}/%06d.jpg'.format(dst)]
+        subprocess.call(video_to_frames_command, stdout=ffmpeg_log, stderr=ffmpeg_log)
 
 
 def iou(box0, box1):
