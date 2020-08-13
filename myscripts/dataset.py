@@ -246,8 +246,17 @@ if __name__ == '__main__':
 
     temp_object = ObjectBranch(in_feature_size=d_2d, out_feature_size=d_model, N=N, n_vocab=n_vocab, pad_idx=pad_idx)
     temp_scene = SceneBranch(T=T, d_2D=d_2D, d_3D=d_3D, out_feature_size=d_model, n_vocab=n_vocab, pad_idx=pad_idx)
-    
+    device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
+    temp_object.to(device)
+    temp_scene.to(device)
+
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(train_loader):
+        G_st = G_st.to(device)
+        F_O = F_O.to(device)
+        resnet_2d = resnet_2d.to(device)
+        i3d_3d = i3d_3d.to(device)
+        sentences = sentences.to(device)
+
         out0 = temp_object(G_st, F_O, sentences)
         out1 = temp_scene(resnet_2d, i3d_3d, sentences)
 
@@ -255,6 +264,8 @@ if __name__ == '__main__':
         print("out1.shape == ", out1.shape)
 
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(valid_loader):
+        resnet_2d = resnet_2d.to(device)
+        i3d_3d = i3d_3d.to(device)
         out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d)
 
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(test_loader):
