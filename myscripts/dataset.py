@@ -262,12 +262,20 @@ if __name__ == '__main__':
         resnet_2d = resnet_2d.to(device)
         i3d_3d = i3d_3d.to(device)
         sentences = sentences.to(device)
+        
+        print('G_st.shape == ', G_st.shape)
+        print('F_O.shape == ', F_O.shape)
+        print('resnet_2d.shape == ', resnet_2d.shape)
+        print('i3d_3d.shape == ', i3d_3d.shape)
+        print('sentences.shape == ', sentences.shape)
 
         out0 = temp_object(G_st, F_O, sentences)
         out1 = temp_scene(resnet_2d, i3d_3d, sentences)
 
         print("out0.shape == ", out0.shape)
         print("out1.shape == ", out1.shape)
+        
+        break
 
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(valid_loader)):
         resnet_2d = resnet_2d.to(device)
