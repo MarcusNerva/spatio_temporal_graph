@@ -159,14 +159,14 @@ class DatasetMSRVTT(Dataset):
             sentences: the pending sentences list, that is, a list contains 20 captions.
 
         Returns:
-            sentencec_proc: a list contains 20 element, each of which is a list of words/numbers.
+            sentences_proc: a list contains 20 element, each of which is a list of words/numbers.
         """
 
-        sentencec_proc = list(map(text_proc.preprocess, sentences))
+        sentences_proc = list(map(text_proc.preprocess, sentences))
         if self.mode in ['valid', 'test']:
-            return sentencec_proc
-        sentencec_proc = text_proc.numericalize(text_proc.pad(sentences_proc))
-        return sentencec_proc
+            return sentences_proc
+        sentences_proc = text_proc.numericalize(text_proc.pad(sentences_proc))
+        return sentences_proc
 
     def __len__(self):
         return 20 * len(self.data_range)
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     from cfgs import get_total_settings
 
     args = get_total_settings()
-    get_vocab_and_seq(args)
+    # get_vocab_and_seq(args)
     train_dataset = DatasetMSRVTT('train', args)
     valid_dataset = DatasetMSRVTT('valid', args)
     test_dataset = DatasetMSRVTT('test', args)
