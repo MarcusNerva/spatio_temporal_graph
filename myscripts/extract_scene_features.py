@@ -174,6 +174,7 @@ def extract_feats(params, model, device):
         outfile = os.path.join(dir_2d_fc, video_id + '.npy')
         np.save(outfile, img_feats)
 
+        """
         # extract optical flow features
         example_frame = cv2.imread(image_list_cpy[0])
         H, W = example_frame.shape[:2]
@@ -185,7 +186,7 @@ def extract_feats(params, model, device):
             flow_path = os.path.join(dir_optical_fc, video_id + '_' + str(i))
             save_flows(x_flow=x_flow, y_flow=y_flow, flow_path=flow_path)
             prev = crt
-
+        """
 
 
 
