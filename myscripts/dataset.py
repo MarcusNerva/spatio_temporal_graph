@@ -99,7 +99,7 @@ class DatasetMSRVTT(Dataset):
             text_proc = pickle.load(f)
 
         for video_id in self.data_range:
-            spatial_matrix_path = os.path.join(object_object_path, video_id + '.npy')
+            spatial_matrix_path = os.path.join(object_spatial_path, video_id + '.npy')
             temporal_matrix_path = os.path.join(object_temporal_path, video_id + '.npy')
             f_o_path = os.path.join(object_object_path, video_id + '.npy')
             resnet_2d_path = os.path.join(scene_2d_path, video_id + '.npy')
