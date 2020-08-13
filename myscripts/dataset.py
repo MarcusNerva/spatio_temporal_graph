@@ -256,7 +256,7 @@ if __name__ == '__main__':
     temp_object.to(device)
     temp_scene.to(device)
 
-    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(train_loader):
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(train_loader)):
         G_st = G_st.to(device)
         F_O = F_O.to(device)
         resnet_2d = resnet_2d.to(device)
@@ -269,10 +269,10 @@ if __name__ == '__main__':
         print("out0.shape == ", out0.shape)
         print("out1.shape == ", out1.shape)
 
-    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(valid_loader):
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(valid_loader)):
         resnet_2d = resnet_2d.to(device)
         i3d_3d = i3d_3d.to(device)
         out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d)
 
-    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(test_loader):
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(st_loader)):
         pass
