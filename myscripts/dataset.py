@@ -135,6 +135,10 @@ class DatasetMSRVTT(Dataset):
         """
         As paper request.
         """
+        
+        spatial_matrix = torch.from_numpy(spatial_matrix)
+        temporal_matrix = torch.from_numpy(temporal_matrix)
+
         N = self.N
         G_st = torch.zeros((N, N))
         for i, j in zip(range(10), range(0, N, 5)):
