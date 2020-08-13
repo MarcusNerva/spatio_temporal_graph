@@ -8,7 +8,7 @@ import argparse
 
 import torch
 import torchvision
-from torchvision.models.resnet import load_state_dict_from_url, model_urls, ResNet, Bottleneck
+from torchvision.models.resnet import model_zoo, model_urls, ResNet, Bottleneck
 import cv2
 C, H, W = 3, 224, 224
 
@@ -41,8 +41,7 @@ class MyResNet(ResNet):
 def _resnet(arch, block, layers, pretrained, progress, **kwargs):
     model = MyResNet(block, layers, **kwargs)
     if pretrained:
-        state_dict = load_state_dict_from_url(model_urls[arch],
-                                              progress=progress)
+        state_dict = model_zoo.load_url(model_zoo.load_url(model_urls[arch]))
         model.load_state_dict(state_dict)
     return model
 
