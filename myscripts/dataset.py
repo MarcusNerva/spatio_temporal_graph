@@ -80,6 +80,8 @@ class DatasetMSRVTT(Dataset):
         self.resnet_2d_feats = []
         self.i3d_3d_feats = []
         self.sentences = []
+        self.pad_idx = None
+        self.n_vocab = None
 
         data_path = args.data_path
         # visual features
@@ -117,6 +119,9 @@ class DatasetMSRVTT(Dataset):
             self.i3d_3d_feats.append(i3d_3d)
             self.sentences += self._process_sentences(text_proc, seq_dict[video_id])
 
+        pad = args.pad
+        self.pad_idx = text_proc.vocab.stoi[pad]
+        self.n_vocab = len(text_proc.vocab.stoi)
 
     def _define_data_range(self):
         
@@ -168,6 +173,12 @@ class DatasetMSRVTT(Dataset):
         sentences_proc = text_proc.numericalize(text_proc.pad(sentences_proc))
         return sentences_proc
 
+    def get_pad_idx(self):
+        return self.pad_idx
+    
+    def get_n_vocab(self):
+        return self.n_vocab
+
     def __len__(self):
         return 20 * len(self.data_range)
 
@@ -203,4 +214,48 @@ if __name__ == '__main__':
     print('length of test_range is ', len(test_range))
     print('begin of test_range is {begin}, end of test_range is {end}'.format(begin=test_range[0], end=test_range[-1]))
 
+    from torch.utils.data import DataLoader
+    from tqdm import tqdm
+    batch_size = 32
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+    
+    from models import ObjectBranch, SceneBranch
+    batch_size = args.batch
+    
+    in_feature_size = args.object_in_feature_size
+    out_feature_size = args.object_out_feature_size
+    N = args.object_N
+    
+    T = args.scene_T
+    d_2D = args.scene_d_2D
+    d_3D = args.scene_d_3D
+    output_features = args.scene_output_features
+    beam_size = args.beam_size
+    max_seq_len = args.max_seq_len
+    encoder_drop = args.encoder_drop
 
+    n_layers = args.n_layers
+    n_heads = args.n_heads
+    d_model = args.d_model
+    d_hidden = args.d_hidden
+    trans_drop = args.trans_drop
+    n_vocab = train_dataset.get_n_vocab()
+    pad_idx = train_dataset.get_pad_idx()
+
+    temp_object = ObjectBranch(in_feature_size=d_2d, out_feature_size=d_model, N=N, n_vocab=n_vocab, pad_idx=pad_idx)
+    temp_scene = SceneBranch(T=T, d_2D=d_2D, d_3D=d_3D, out_feature_size=d_model, n_vocab=n_vocab, pad_idx=pad_idx)
+    
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(train_loader):
+        out0 = temp_object(G_st, F_O, sentences)
+        out1 = temp_scene(resnet_2d, i3d_3d, sentences)
+
+        print("out0.shape == ", out0.shape)
+        print("out1.shape == ", out1.shape)
+
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(valid_loader):
+        out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d)
+
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(test_loader):
+        pass
