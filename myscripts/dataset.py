@@ -117,9 +117,10 @@ class DatasetMSRVTT(Dataset):
             self.F_O.append(f_o)
             self.resnet_2d_feats.append(resnet_2d)
             self.i3d_3d_feats.append(i3d_3d)
-            temp = self._process_sentences(text_proc, seq_dict[video_id])
-            print(temp)
-            self.sentences += self._process_sentences(text_proc, seq_dict[video_id])
+            temp_sents = self._process_sentences(text_proc, seq_dict[video_id])
+            
+            for sent in temp_sents:
+                self.sentences.append(sent)
 
         pad = args.pad
         self.pad_idx = text_proc.vocab.stoi[pad]
