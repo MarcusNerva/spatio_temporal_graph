@@ -13,16 +13,10 @@ import cv2
 C, H, W = 3, 224, 224
 
 class MyResNet(ResNet):
-    def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
-                groups=1, width_per_group=64, replace_stride_with_dilation=None,
-                 norm_layer=None):
-        super(MyResNet, self).__init__(block=block, layers=layers, num_classes=num_classes, 
-                                       zero_init_residual=zero_init_residual, groups=groups,
-                                      width_per_group=width_per_group, 
-                                       replace_stride_with_dilation=replace_stride_with_dilation,
-                                      norm_layer=norm_layer)
+    def __init__(self, block, layers, num_classes=1000):
+        super(MyResNet, self).__init__(block=block, layers=layers, num_classes=num_classes)
 
-    def _forward_impl(self, x):
+    def forward(self, x):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
@@ -38,16 +32,17 @@ class MyResNet(ResNet):
 
         return x
 
-def _resnet(arch, block, layers, pretrained, progress, **kwargs):
-    model = MyResNet(block, layers, **kwargs)
-    if pretrained:
-        state_dict = model_zoo.load_url(model_zoo.load_url(model_urls[arch]))
-        model.load_state_dict(state_dict)
-    return model
 
 def get_resnet101(pretrained=False, progress=True, **kwargs):
-    return _resnet('resnet101', Bottleneck, [3, 4, 23, 3], pretrained, progress,
-                   **kwargs)
+    """Constructs a ResNet-101 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+    """
+    model = MyResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
+    if pretrained:
+        model.load_state_dict(model_zoo.load_url(model_urls['resnet101']))
+    return model
 
 def process_frames(frames_path):
     """
