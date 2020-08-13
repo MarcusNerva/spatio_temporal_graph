@@ -247,8 +247,8 @@ if __name__ == '__main__':
     n_vocab = train_dataset.get_n_vocab()
     pad_idx = train_dataset.get_pad_idx()
 
-    temp_object = ObjectBranch(in_feature_size=d_2d, out_feature_size=d_model, N=N, n_vocab=n_vocab, pad_idx=pad_idx)
-    temp_scene = SceneBranch(T=T, d_2D=d_2D, d_3D=d_3D, out_feature_size=d_model, n_vocab=n_vocab, pad_idx=pad_idx)
+    temp_object = ObjectBranch(in_feature_size=in_feature_size, out_feature_size=out_feature_size, N=N, n_vocab=n_vocab, pad_idx=pad_idx)
+    temp_scene = SceneBranch(T=T, d_2D=d_2D, d_3D=d_3D, out_feature_size=output_features, n_vocab=n_vocab, pad_idx=pad_idx)
     device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
     temp_object.to(device)
     temp_scene.to(device)
