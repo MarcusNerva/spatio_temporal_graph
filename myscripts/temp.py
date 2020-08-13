@@ -20,6 +20,9 @@ if __name__ == '__main__':
     print('size of seq_dict is {siz}'.format(siz=len(seq_dict)))
     print('size of text_proc.vocab is {siz}'.format(siz=len(text_proc.vocab.stoi)))
     
+    zero = False
     for key in seq_dict.keys():
-        print(seq_dict[key])
-        break
+        if key == 'video0':
+            zero = True
+        if zero: break
+    print("{}".format('Finded' if zero else 'oops'))    
