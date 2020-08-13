@@ -117,6 +117,8 @@ class DatasetMSRVTT(Dataset):
             self.F_O.append(f_o)
             self.resnet_2d_feats.append(resnet_2d)
             self.i3d_3d_feats.append(i3d_3d)
+            temp = self._process_sentences(text_proc, seq_dict[video_id])
+            print(temp)
             self.sentences += self._process_sentences(text_proc, seq_dict[video_id])
 
         pad = args.pad
@@ -199,7 +201,7 @@ if __name__ == '__main__':
     from models import ObjectBranch, SceneBranch
 
     args = get_total_settings()
-    get_vocab_and_seq(args)
+    # get_vocab_and_seq(args)
     train_dataset = DatasetMSRVTT('train', args)
     valid_dataset = DatasetMSRVTT('valid', args)
     test_dataset = DatasetMSRVTT('test', args)
