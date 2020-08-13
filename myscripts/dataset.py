@@ -225,7 +225,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
     
     from models import ObjectBranch, SceneBranch
-    batch_size = args.batch
+    batch_size = 32
     
     in_feature_size = args.object_in_feature_size
     out_feature_size = args.object_out_feature_size
