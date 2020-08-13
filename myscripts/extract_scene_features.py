@@ -156,16 +156,13 @@ def extract_feats(params, model, device):
     for video in tqdm(video_list):
         video_id = video.split('/')[-1].split('.')[0]
         dst = os.path.join(dir_frame_fc, video_id)
+        extract_frames(video, dst)
         process_frames(dst)
 
         # extract ResNet101 2D features
         image_list = sorted(glob.glob(os.path.join(dst, '*.jpg')))
         image_list_cpy = image_list.copy()
         samples = np.round(np.linspace(0, len(image_list) - 1, params['n_frame_steps_2D']))
-        
-        print('image_list.length == ',len(image_list))
-        print(samples)
-
         image_list = [image_list[int(sample)] for sample in samples]
         images = torch.zeros(len(image_list), C, H, W)
         for iImg in range(len(image_list)):
@@ -191,6 +188,7 @@ def extract_feats(params, model, device):
             save_flows(x_flow=x_flow, y_flow=y_flow, flow_path=flow_path)
             prev = crt
         """
+        shutil.rmtree(dst)
 
 
 
