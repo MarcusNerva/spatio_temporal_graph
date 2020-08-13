@@ -1,24 +1,25 @@
 import numpy as np
 import glob
 import os
-
+import json
+import pickle
+# from collections import defaultdict
 
 if __name__ == '__main__':
-    spatial_path = '/Users/bismarck/Downloads/temp_data/object/spatial'
-    temporal_path = '/Users/bismarck/Downloads/temp_data/object/temporal'
+    seq_dict_path = '/Users/bismarck/Downloads/temp_data/seq_dict.pkl'
+    text_proc_path = '/Users/bismarck/Downloads/temp_data/torchtext.pkl'
+    
+    with open(seq_dict_path, 'rb') as f:
+        seq_dict = pickle.load(f)
+    with open(text_proc_path, 'rb') as f:
+        text_proc = pickle.load(f)
 
-    spatial_list = glob.glob(os.path.join(spatial_path, '*.npy'))
-    temporal_list = glob.glob(os.path.join(temporal_path, '*.npy'))
+    print(type(seq_dict))
+    print(type(text_proc))
 
-    print("here is spatial features:")
-    for spatial in spatial_list:
-        content = np.load(spatial)
-        print(content.shape)
-        print(content)
-
-    # print("here is temporal features:")
-    # for temporal in temporal_list:
-    #     content = np.load(temporal)
-    #     print(content.shape)
-    #     print(content)
-
+    print('size of seq_dict is {siz}'.format(siz=len(seq_dict)))
+    print('size of text_proc.vocab is {siz}'.format(siz=len(text_proc.vocab.stoi)))
+    
+    for key in seq_dict.keys():
+        print(seq_dict[key])
+        break
