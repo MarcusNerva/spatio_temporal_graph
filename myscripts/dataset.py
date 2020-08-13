@@ -199,7 +199,7 @@ if __name__ == '__main__':
     from models import ObjectBranch, SceneBranch
 
     args = get_total_settings()
-    # get_vocab_and_seq(args)
+    get_vocab_and_seq(args)
     train_dataset = DatasetMSRVTT('train', args)
     valid_dataset = DatasetMSRVTT('valid', args)
     test_dataset = DatasetMSRVTT('test', args)
