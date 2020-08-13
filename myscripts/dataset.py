@@ -193,7 +193,10 @@ class DatasetMSRVTT(Dataset):
 if __name__ == '__main__':
     import sys
     sys.path.append('..')
+    sys.path.append('../models/')
+    print(sys.path)
     from cfgs import get_total_settings
+    from models import ObjectBranch, SceneBranch
 
     args = get_total_settings()
     # get_vocab_and_seq(args)
