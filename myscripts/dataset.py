@@ -81,6 +81,8 @@ class DatasetMSRVTT(Dataset):
         self.i3d_3d_feats = []
         self.sentences = []
         self.pad_idx = None
+        self.bos_idx = None
+        self.eos_idx = None
         self.n_vocab = None
 
         data_path = args.data_path
@@ -123,8 +125,12 @@ class DatasetMSRVTT(Dataset):
                 self.sentences.append(sent)
 
         pad = args.pad
+        bos = args.bos
+        eos = args.eos
         self.pad_idx = text_proc.vocab.stoi[pad]
         self.n_vocab = len(text_proc.vocab.stoi)
+        self.bos_idx = text_proc.vocab.stoi[bos]
+        self.eos_idx = text_proc.vocab.stoi[eos]
 
     def _define_data_range(self):
         
@@ -179,6 +185,12 @@ class DatasetMSRVTT(Dataset):
     def get_pad_idx(self):
         return self.pad_idx
     
+    def get_bos_idx(self):
+        return self.eos_idx
+
+    def get_eos_idx(self):
+        return self.eos_idx
+
     def get_n_vocab(self):
         return self.n_vocab
 
@@ -249,6 +261,8 @@ if __name__ == '__main__':
     trans_drop = args.trans_drop
     n_vocab = train_dataset.get_n_vocab()
     pad_idx = train_dataset.get_pad_idx()
+    bos_idx = train_dataset.get_bos_idx()
+    eos_idx = train_dataset.get_eos_idx()
 
     temp_object = ObjectBranch(in_feature_size=in_feature_size, out_feature_size=out_feature_size, N=N, n_vocab=n_vocab, pad_idx=pad_idx)
     temp_scene = SceneBranch(T=T, d_2D=d_2D, d_3D=d_3D, out_feature_size=output_features, n_vocab=n_vocab, pad_idx=pad_idx)
@@ -280,7 +294,9 @@ if __name__ == '__main__':
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(valid_loader)):
         resnet_2d = resnet_2d.to(device)
         i3d_3d = i3d_3d.to(device)
-        out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d)
+        out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d, 
+                                            beam_size=beam_size, max_seq_len=max_seq_len,
+                                           bos_idx=bos_idx, eos_idx=eos_idx)
 
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(st_loader)):
         pass
