@@ -97,7 +97,7 @@ class Transformer(nn.Module):
         self.x_logit_scale = 1.
         self.n_vocab = n_vocab
         self.pad_idx = pad_idx
-        self.device = torch.device('cuda' if torch.cuda.is_available() 'cpu')
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         for p in self.parameters():
             if p.dim() > 1:
