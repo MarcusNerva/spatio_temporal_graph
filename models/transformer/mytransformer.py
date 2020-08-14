@@ -243,9 +243,9 @@ class Transformer(nn.Module):
         self.bos_idx = bos_idx
         self.eos_idx = eos_idx
 
-        self.register_buffer('init_seq', torch.LongTensor([[bos_idx]]).to(self.device))
-        self.register_buffer('blank_seqs', torch.full((beam_size, max_seq_len), self.pad_idx, dtype=torch.long).to(self.device))
-        self.register_buffer('len_map', torch.arange(1, max_seq_len + 1, dtype=torch.long).unsqueeze(0).to(self.device))
+        self.register_buffer('init_seq', torch.LongTensor([[bos_idx]]))
+        self.register_buffer('blank_seqs', torch.full((beam_size, max_seq_len), self.pad_idx, dtype=torch.long))
+        self.register_buffer('len_map', torch.arange(1, max_seq_len + 1, dtype=torch.long).unsqueeze(0))
         self.blank_seqs[:, 0] = self.bos_idx
 
         with torch.no_grad():
