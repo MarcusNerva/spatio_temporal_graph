@@ -97,6 +97,7 @@ class Transformer(nn.Module):
         self.x_logit_scale = 1.
         self.n_vocab = n_vocab
         self.pad_idx = pad_idx
+        self.device = torch.device('cuda' if torch.cuda.is_available() 'cpu')
 
         for p in self.parameters():
             if p.dim() > 1:
@@ -107,12 +108,12 @@ class Transformer(nn.Module):
             self.x_logit_scale = (d_model ** -0.5)
 
     def get_pad_mask(self, seq):
-        return (seq != self.pad_idx).unsqueeze(-2)
+        return (seq != self.pad_idx).unsqueeze(-2).to(self.device)
 
     def get_subsequent_mask(self, seq):
         batch, length = seq.shape
         subsequent_mask = (1 - torch.triu(torch.ones((1, length, length), device=seq.device), diagonal=1)).bool()
-        return subsequent_mask
+        return subsequent_mask.to(self.device)
 
     def forward(self, features, gt_seq):
         encoder_output  = self.encoder(features=features, mask=None)
@@ -242,9 +243,9 @@ class Transformer(nn.Module):
         self.bos_idx = bos_idx
         self.eos_idx = eos_idx
 
-        self.register_buffer('init_seq', torch.LongTensor([[bos_idx]]))
-        self.register_buffer('blank_seqs', torch.full((beam_size, max_seq_len), self.pad_idx, dtype=torch.long))
-        self.register_buffer('len_map', torch.arange(1, max_seq_len + 1, dtype=torch.long).unsqueeze(0))
+        self.register_buffer('init_seq', torch.LongTensor([[bos_idx]]).to(self.device))
+        self.register_buffer('blank_seqs', torch.full((beam_size, max_seq_len), self.pad_idx, dtype=torch.long).to(self.device))
+        self.register_buffer('len_map', torch.arange(1, max_seq_len + 1, dtype=torch.long).unsqueeze(0).to(self.device))
         self.blank_seqs[:, 0] = self.bos_idx
 
         with torch.no_grad():
