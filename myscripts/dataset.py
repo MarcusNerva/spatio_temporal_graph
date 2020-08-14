@@ -294,6 +294,8 @@ if __name__ == '__main__':
     for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(valid_loader)):
         resnet_2d = resnet_2d.to(device)
         i3d_3d = i3d_3d.to(device)
+        bos_idx = bos_idx.to(device)
+        eos_idx = eos_idx.to(device)
         out0 = temp_scene.generate_sentence(resnet_2d, i3d_3d, 
                                             beam_size=beam_size, max_seq_len=max_seq_len,
                                            bos_idx=bos_idx, eos_idx=eos_idx)
