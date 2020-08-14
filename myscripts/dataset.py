@@ -300,5 +300,5 @@ if __name__ == '__main__':
                                             beam_size=beam_size, max_seq_len=max_seq_len,
                                            bos_idx=bos_idx, eos_idx=eos_idx)
 
-    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(st_loader)):
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(test_loader)):
         pass
