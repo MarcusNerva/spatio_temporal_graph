@@ -263,7 +263,7 @@ class Transformer(nn.Module):
                 eos_locs = generated_seq == self.eos_idx
                 seq_lens, _ = self.len_map.masked_fill(~eos_locs, max_seq_len).min(1)
                 if (eos_locs.sum(1) > 0).sum(0).item() == beam_size:
-                    _, ans_idx = scores.div(seq_lens.float() ** alpha).max(0)
+                    _, ans_idx = scores.div(seq_lens.float() ** self.alpha).max(0)
                     ans_idx = ans_idx.item()
                     break
 
