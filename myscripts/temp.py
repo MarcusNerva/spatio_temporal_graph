@@ -5,28 +5,18 @@ import glob
 import os
 import json
 import pickle
-
-class Experiment(nn.Module):
-    def __init__(self):
-        super(Experiment, self).__init__()
-        self.register_buffer('blank_seq', torch.ones((3, 3)))
-
-    def generate(self):
-        self.register_buffer('full_seq', torch.zeros((3, 3)))
-
-    def get_device_origin(self):
-        return self.blank_seq.device
-
-    def get_device_generate(self):
-        self.generate()
-        return self.full_seq.device
+import sys
+sys.path.append('../')
 
 if __name__ == '__main__':
+    from dataset import DatasetMSRVTT
+    from cfgs import get_total_settings
+    from torch.utils.data import DataLoader
 
-    exper = Experiment()
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    exper.to(device)
+    args = get_total_settings()
+    valid_set = DatasetMSRVTT('valid', args)
+    valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False)
 
-    print(exper.get_device_origin())
-    print(exper.get_device_generate())
-
+    for i, (G_st, F_O, resnet_2d, i3d_3d, sentences) in tqdm(enumerate(test_loader)):
+        print(sentences)
+        break
